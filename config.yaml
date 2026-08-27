@@ -1,0 +1,15 @@
+corpus:
+  name: "corpus_a"
+  path: "./data/corpus_a"
+
+chunking:
+  chunk_size: 800
+  chunk_overlap: 120
+
+embedding:
+  provider: "sentence-transformers"
+  model: "all-MiniLM-L6-v2"
+
+vectorstore:
+  provider: "chroma"
+  persist_dir: "./storage/chroma"
