@@ -14,3 +14,14 @@ embedding:
 vectorstore:
   provider: "chroma"
   persist_dir: "./storage/chroma"
+
+generation:
+  provider: "ollama"
+  anthropic:
+    model: "claude-sonnet-4-6"
+    max_tokens: 800
+    temperature: 0.0
+  ollama:
+    model: "llama3.1:8b"
+    base_url: "http://localhost:11434"
+    temperature: 0.0
