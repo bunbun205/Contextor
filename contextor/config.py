@@ -18,3 +18,11 @@ class Config:
     @property
     def corpus_path(self) -> Path:
         return Path(self.raw["corpus"]["path"])
+
+    @property
+    def collection_name(self) -> str:
+        return self.raw["corpus"]["name"]
+
+    @property
+    def persist_dir(self) -> Path:
+        return Path(self.raw["vectorstore"]["persist_dir"])

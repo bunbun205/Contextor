@@ -9,6 +9,7 @@ chunking:
 embedding:
   provider: "sentence-transformers"
   model: "all-MiniLM-L6-v2"
+  device: "auto"
 
 vectorstore:
   provider: "chroma"
