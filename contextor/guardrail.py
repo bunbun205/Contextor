@@ -1,6 +1,11 @@
 import re
 from .embedder import Embedder
 
+_CITATION_ONLY_PATTERN = re.compile(r"^(\[[^\]]*\]\s*)+$")
+
+def _is_citation_only(sentence: str) -> bool:
+    return bool(_CITATION_ONLY_PATTERN.match(sentence.strip()))
+
 def _cosine_similarity(a: list[float], b: list[float]) -> float:
     dot = sum(x * y for x, y in zip(a, b))
     norm_a = sum(x * x for x in a) ** 0.5
@@ -42,6 +47,8 @@ class Guardrail:
 
         flagged = []
         for sentence, sent_emb in zip(answer_sentences, answer_embeddings):
+            if _is_citation_only(sentence):
+                continue
             best_similarity = max(
                 _cosine_similarity(sent_emb, ctx_emb) for ctx_emb in context_embeddings
             )

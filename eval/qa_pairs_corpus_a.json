@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What damage does the fireball spell deal?",
+    "expected_source": "spells.md"
+  },
+  {
+    "question": "How many attacks can a level 5 fighter make?",
+    "expected_source": "classes.md"
+  },
+  {
+    "question": "How many attacks can a level 20 fighter make?",
+    "expected_source": "classes.md"
+  },
+  {
+    "question": "What happens when you fail a Dexterity saving throw against fireball?",
+    "expected_source": "spells.md"
+  },
+  {
+    "question": "What ability score improvement do fighters gain at level 4?",
+    "expected_source": "classes.md"
+  }
+]
