@@ -1,6 +1,6 @@
 corpus:
-  name: "corpus_a"
-  path: "./data/corpus_a"
+  name: "corpus_b"
+  path: "./data/corpus_b"
 
 chunking:
   chunk_size: 800
