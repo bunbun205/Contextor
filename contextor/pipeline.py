@@ -9,6 +9,8 @@ from .guardrail import Guardrail
 class ContextorPipeline:
     def __init__(self, config: Config):
         self.config = config
+        from .reranker import Reranker
+        self.reranker = Reranker(config["retrieval"]["reranker_model"])
 
         self.embedder = Embedder(
             model_name=config["embedding"]["model"],
@@ -23,6 +25,7 @@ class ContextorPipeline:
         self.guardrail = Guardrail(
             enabled=config["guardrail"]["enabled"],
             strict_mode=config["guardrail"]["strict_mode"],
+            embedder=self.embedder,
         )
 
     def ingest(self) -> int:
@@ -39,8 +42,10 @@ class ContextorPipeline:
         top_k = self.config["retrieval"]["top_k"]
         hits = self.vectorstore.query(question, top_k=top_k)
 
-        rerank_top_k = self.config["retrieval"]["rerank_top_k"]
-        hits = hits[:rerank_top_k]
+        if self.config["retrieval"]["rerank"]:
+            hits = self.reranker.rerank(question, hits, top_k=self.config["retrieval"]["rerank_top_k"])
+        else:
+            hits = hits[:self.config["retrieval"]["rerank_top_k"]]
 
         answer = self.generator.generate(question, hits)
         result = self.guardrail.check(answer, hits)

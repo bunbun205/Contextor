@@ -9,8 +9,17 @@ class Document:
     text: str
 
 
-def _load_txt_or_md(path: Path) -> str:
+def _load_txt(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
+
+def _load_markdown(path: Path) -> str:
+    text = path.read_text(encoding="utf-8", errors="ignore")
+
+    if "<td>" in text or "<tr>" in text or "<strong>" in text:
+        from bs4 import BeautifulSoup
+        text = BeautifulSoup(text, "html.parser").get_text(separator=" ")
+
+    return text
 
 def _load_pdf(path: Path) -> str:
     from pypdf import PdfReader
@@ -30,8 +39,10 @@ def load_corpus(corpus_path: Path) -> list[Document]:
         if path.suffix.lower() not in SUPPORTED_EXTENSIONS or not path.is_file():
             continue
 
-        if path.suffix.lower() in {".txt", ".md"}:
-            text = _load_txt_or_md(path)
+        if path.suffix.lower() == ".txt":
+            text = _load_txt(path)
+        elif path.suffix.lower() in { ".md", ".mdx" }:
+            text = _load_markdown(path)
         elif path.suffix.lower() == ".pdf":
             text = _load_pdf(path)
         elif path.suffix.lower() == ".html":
