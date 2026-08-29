@@ -1,6 +1,6 @@
 corpus:
-  name: "corpus_a"
-  path: "./data/corpus_a"
+  name: "corpus_b"
+  path: "./data/corpus_b"
 
 chunking:
   chunk_size: 800
@@ -9,7 +9,33 @@ chunking:
 embedding:
   provider: "sentence-transformers"
   model: "all-MiniLM-L6-v2"
+  device: "auto"
 
 vectorstore:
   provider: "chroma"
   persist_dir: "./storage/chroma"
+
+generation:
+  provider: "ollama"
+  anthropic:
+    model: "claude-sonnet-5"
+    max_tokens: 800
+    temperature: 0.0
+  openai:
+    model: "gpt-5.4-mini"
+    max_tokens: 800
+    temperature: 0.0
+  ollama:
+    model: "llama3.1:8b"
+    base_url: "http://localhost:11434"
+    temperature: 0.0
+
+retrieval:
+  top_k: 20
+  rerank: true
+  rerank_top_k: 5
+  reranker_model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+guardrail:
+  enabled: true
+  strict_mode: false
