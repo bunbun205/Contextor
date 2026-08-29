@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
+from dotenv import load_dotenv
 import yaml
 
 @dataclass
@@ -8,6 +9,7 @@ class Config:
 
     @classmethod
     def load(cls, path: str = "config.yaml") -> "Config":
+        load_dotenv()
         with open(path, "r") as f:
             raw = yaml.safe_load(f)
         return cls(raw=raw)

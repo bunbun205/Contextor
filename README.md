@@ -166,7 +166,7 @@ this codebase:
 | Embeddings | `sentence-transformers` (`all-MiniLM-L6-v2`), local, CPU/GPU auto-detect |
 | Vector store | Chroma (embedded, file-persisted) |
 | Reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2` |
-| Generation | Anthropic Claude or Ollama (`llama3.1:8b`), swappable via config |
+| Generation | Anthropic Claude, OpenAI, or Ollama — swappable via config, validated against a per-provider known-models list |
 | Guardrail | Sentence-level cosine similarity grounding check |
 
 ## Corpus Attribution
