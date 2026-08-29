@@ -45,7 +45,7 @@ class Guardrail:
             best_similarity = max(
                 _cosine_similarity(sent_emb, ctx_emb) for ctx_emb in context_embeddings
             )
-            if best_similarity > self.threshold:
+            if best_similarity < self.threshold:
                 flagged.append(sentence)
 
         grounded = len(flagged) == 0
