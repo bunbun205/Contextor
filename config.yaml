@@ -1,6 +1,6 @@
 corpus:
-  name: "corpus_b"
-  path: "./data/corpus_b"
+  name: "corpus_a"
+  path: "./data/corpus_a"
 
 chunking:
   chunk_size: 800
@@ -16,7 +16,7 @@ vectorstore:
   persist_dir: "./storage/chroma"
 
 generation:
-  provider: "ollama"
+  provider: "gemini"
   anthropic:
     model: "claude-sonnet-5"
     max_tokens: 800
@@ -24,6 +24,10 @@ generation:
   openai:
     model: "gpt-5.4-mini"
     max_tokens: 800
+    temperature: 0.0
+  gemini:
+    model: "gemini-3.6-flash"
+    max_tokens: 800,
     temperature: 0.0
   ollama:
     model: "llama3.1:8b"

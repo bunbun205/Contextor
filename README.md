@@ -23,6 +23,21 @@ guardrail.py (sentence-level grounding check)
 |
 answer + citations
 
+## Architecture
+
+```text
+data/corpus/ --> loader.py --> chunker.py --> embedder.py --> vectorstore.py (Chroma)
+|
+question --------------------------------------------------> retriever (top-k, embedding search)
+|
+reranker.py (cross-encoder)
+|
+generator.py (Anthropic or Ollama)
+|
+guardrail.py (sentence-level grounding check)
+|
+answer + citations
+```
 
 Every stage is an independently-swappable module with a narrow interface.
 `pipeline.py` is the only file that wires them together — no module
@@ -45,7 +60,9 @@ uv add pyyaml sentence-transformers chromadb anthropic pypdf beautifulsoup4 tqdm
 
 Create a `.env` file at the project root:
 
+```text
 ANTHROPIC_API_KEY=sk-ant-your-key-here
+```
 
 (Only required if using the Anthropic provider — see Configuration below.)
 

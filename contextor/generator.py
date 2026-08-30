@@ -15,6 +15,11 @@ KNOWN_MODELS = {
         "o4-mini",
         "o3",
     ],
+    "gemini": [
+        "gemini-3.5-flash",
+        "gemini-3.6-flash",
+        "gemini-3.7-flash",
+    ],
     "ollama": [
         "llama3.1:8b",
         "llama3.1:70b",
@@ -44,7 +49,7 @@ class BaseGenerator(ABC):
     def generate(self, query: str, context_chunks: list[dict]) -> str:
         ...
 
-class AntrhopicGenerator(BaseGenerator):
+class AnthropicGenerator(BaseGenerator):
     def __init__(self, model: str, max_tokens: int, temperature: float):
         self.model = model
         self.max_tokens = max_tokens
@@ -97,6 +102,35 @@ class OPenAIGenerator(BaseGenerator):
         return response.choices[0].message.content
 
 
+class GeminiGenerator(BaseGenerator):
+    def __init__(self, model: str, max_tokens: int, temperature: float):
+        self.model = model
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+
+    def generate(self, query: str, context_chunks: list[dict]) -> str:
+        import os
+        from google import genai
+        from google.genai import types
+
+        context_block = "\n\n".join(
+            f"[source: {c['source']}]\n{c['text']}" for c in context_chunks
+        )
+        user_message = f"Context:\n{context_block}\n\nQuestion: {query}"
+
+        client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        response = client.models.generate_content(
+            model=self.model,
+            contents=user_message,
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=self.temperature,
+                max_output_tokens=int(str(self.max_tokens).strip(",")),
+            ),
+        )
+        return response.text
+
+
 class OllamaGenerator(BaseGenerator):
     def __init__(self, model: str, base_url: str, temperature: float):
         self.model = model
@@ -134,7 +168,7 @@ def create_generator(config) -> BaseGenerator:
         _warn_if_unknown_model(provider, model)
 
     if provider == "anthropic":
-        return AntrhopicGenerator(
+        return AnthropicGenerator(
             model=settings["model"],
             max_tokens=settings["max_tokens"],
             temperature=settings["temperature"],
@@ -142,6 +176,13 @@ def create_generator(config) -> BaseGenerator:
 
     elif provider == "openai":
         return OPenAIGenerator(
+            model=settings["model"],
+            max_tokens=settings["max_tokens"],
+            temperature=settings["temperature"],
+        )
+
+    elif provider == "gemini":
+        return GeminiGenerator(
             model=settings["model"],
             max_tokens=settings["max_tokens"],
             temperature=settings["temperature"],
